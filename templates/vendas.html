@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Página de Venda{% endblock %}
+
+{% block content %}
+    <h2>Realizar Venda</h2>
+
+    <div class="venda-container">
+        <div class="search-product-section">
+            <h3>Buscar Produto</h3>
+            <div class="form-group">
+                <input type="text" id="search_product" placeholder="Digite nome ou marca do produto...">
+                <button type="button" class="btn btn-secondary" onclick="searchProducts()">Buscar</button>
+            </div>
+            <div id="search_results" class="search-results-box">
+                </div>
+        </div>
+
+        <div class="cart-section">
+            <h3>Itens da Venda</h3>
+            <ul id="cart_items" class="cart-list">
+                </ul>
+            <div class="cart-summary">
+                <p>Total: R$ <span id="total_venda">0.00</span></p>
+                <button type="button" class="btn btn-primary" onclick="finalizarVenda()">Finalizar Venda</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="venda_modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal()">&times;</span>
+            <h3>Detalhes da Venda</h3>
+            <div id="modal_venda_details">
+                </div>
+            <button class="btn btn-secondary" onclick="printVenda()">Imprimir</button>
+            <button class="btn btn-tertiary" onclick="closeModal()">Fechar</button>
+        </div>
+    </div>
+{% endblock %}

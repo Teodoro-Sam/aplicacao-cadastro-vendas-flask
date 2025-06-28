@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Minha Aplicação{% endblock %}
+
+{% block content %}
+    <section class="hero">
+        <div class="hero-content">
+            <h2>Bem-vindo à sua Aplicação de Gestão!</h2>
+            <p>Gerencie clientes, produtos e vendas de forma eficiente.</p>
+            <div class="hero-buttons">
+                <a href="{{ url_for('venda_page') }}" class="btn btn-primary">Realizar Venda</a>
+                <a href="{{ url_for('cadastro_cliente') }}" class="btn btn-secondary">Cadastrar Cliente</a>
+                <a href="{{ url_for('cadastro_produto') }}" class="btn btn-secondary">Cadastrar Produto</a>
+            </div>
+        </div>
+    </section>
+{% endblock %}
