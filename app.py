@@ -150,6 +150,13 @@ def detalhes_venda(venda_id):
     venda = Venda.query.get_or_404(venda_id)
     return render_template('detalhes_venda.html', venda=venda)
 
+# Nova rota para consulta de estoque
+@app.route('/estoque')
+def estoque():
+    # Consulta todos os produtos ordenados pelo nome
+    produtos = Produto.query.order_by(Produto.nome).all()
+    return render_template('estoque.html', produtos=produtos)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
