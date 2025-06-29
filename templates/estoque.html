@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Consulta de Estoque{% endblock %}
+
+{% block content %}
+    <h2>Consulta de Estoque</h2>
+
+    {% if produtos %}
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nome do Produto</th>
+                        <th>Marca</th>
+                        <th>Peso</th>
+                        <th>Quantidade em Estoque</th>
+                        <th>Valor Unitário</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for produto in produtos %}
+                    <tr>
+                        <td>{{ produto.nome }}</td>
+                        <td>{{ produto.marca }}</td>
+                        <td>{{ "%.2f kg"|format(produto.peso) if produto.peso else 'N/A' }}</td>
+                        <td class="{% if produto.quantidade < 5 %}low-stock{% endif %}">{{ produto.quantidade }}</td>
+                        <td>R$ {{ "%.2f"|format(produto.valor) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p class="info-message">Nenhum produto cadastrado para exibir o estoque.</p>
+        <p class="info-message">Por favor, <a href="{{ url_for('cadastro_produto') }}">cadastre alguns produtos</a>.</p>
+    {% endif %}
+{% endblock %}

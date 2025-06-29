@@ -469,3 +469,69 @@ footer {
         margin: 0;
     }
 }
+/* static/css/style.css */
+
+/* ... (seu CSS existente) ... */
+
+/* Table Styles for Estoque Page */
+.table-container {
+    background-color: var(--card-bg);
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    max-width: 900px;
+    margin: 30px auto;
+    overflow-x: auto; /* Para tabelas grandes em telas pequenas */
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table thead th {
+    background-color: var(--primary-color);
+    color: var(--light-text);
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 2px solid #0056b3;
+}
+
+table tbody td {
+    padding: 10px 15px;
+    border-bottom: 1px solid var(--border-color);
+    vertical-align: middle;
+}
+
+table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+table tbody tr:hover {
+    background-color: #e9ecef;
+}
+
+/* Low Stock Highlight */
+.low-stock {
+    font-weight: bold;
+    color: var(--danger-color);
+}
+
+/* Info Message */
+.info-message {
+    text-align: center;
+    padding: 20px;
+    background-color: var(--info-color);
+    color: var(--light-text);
+    border-radius: 5px;
+    margin-top: 20px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.info-message a {
+    color: var(--light-text);
+    text-decoration: underline;
+}
