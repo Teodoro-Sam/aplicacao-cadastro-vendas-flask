@@ -17,6 +17,30 @@ with app.app_context():
 
 # --- Rotas ---
 
+@app.route('/api/produtos')
+def api_produtos():
+    query = request.args.get('q', '').strip() # Pega o termo de busca da URL
+    if query:
+        # Busca produtos cujo nome ou marca contenham a 'query' (case-insensitive)
+        produtos = Produto.query.filter(
+            (Produto.nome.ilike(f'%{query}%')) |  # Busca no nome
+            (Produto.marca.ilike(f'%{query}%'))   # Busca na marca
+        ).limit(10).all() # Limita a 10 resultados para performance
+    else:
+        # Se não houver query, retorna todos os produtos (ou nenhum, dependendo da sua preferência)
+        # Para consulta de estoque na venda, faz mais sentido retornar todos se não houver filtro inicial
+        produtos = Produto.query.all() # Alterei aqui para retornar todos se a query for vazia
+    
+    # Prepara os dados dos produtos para enviar como JSON
+    produtos_data = [{
+        'id': p.id,
+        'nome': p.nome,
+        'marca': p.marca,
+        'valor': p.valor,
+        'quantidade_estoque': p.quantidade
+    } for p in produtos]
+    return jsonify(produtos_data)
+
 @app.route('/')
 def home():
     return render_template('home.html')

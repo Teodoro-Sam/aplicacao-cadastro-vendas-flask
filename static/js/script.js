@@ -2,6 +2,44 @@
 
 let cart = []; // Array para armazenar os itens do carrinho
 
+// static/js/scripts.js
+
+function searchProducts() {
+    const query = document.getElementById('search_product').value;
+    const searchResultsDiv = document.getElementById('search_results');
+    searchResultsDiv.innerHTML = 'Carregando...';
+
+    // A requisição fetch para a API de produtos
+    fetch(`/api/produtos?q=${query}`)
+        .then(response => response.json())
+        .then(data => {
+            searchResultsDiv.innerHTML = '';
+            if (data.length === 0) {
+                searchResultsDiv.innerHTML = '<p style="padding: 10px; text-align: center;">Nenhum produto encontrado.</p>';
+                return;
+            }
+            const ul = document.createElement('ul');
+            data.forEach(product => {
+                const li = document.createElement('li');
+                // IMPORTANTE: Verifica se o produto tem estoque > 0 para adicionar
+                const addButton = product.quantidade_estoque > 0 ?
+                    `<button class="btn btn-primary" onclick="addToCart(${product.id}, '${product.nome}', ${product.valor}, ${product.quantidade_estoque})">Adicionar</button>` :
+                    `<span class="no-stock-message">Sem Estoque</span>`;
+                
+                li.innerHTML = `
+                    <span>${product.nome} (${product.marca}) - R$ ${product.valor.toFixed(2)} (Estoque: ${product.quantidade_estoque})</span>
+                    ${addButton}
+                `;
+                ul.appendChild(li);
+            });
+            searchResultsDiv.appendChild(ul);
+        })
+        .catch(error => {
+            console.error('Erro ao buscar produtos:', error);
+            searchResultsDiv.innerHTML = '<p style="color: red; padding: 10px;">Erro ao carregar produtos.</p>';
+        });
+}
+
 function searchProducts() {
     const query = document.getElementById('search_product').value;
     const searchResultsDiv = document.getElementById('search_results');
