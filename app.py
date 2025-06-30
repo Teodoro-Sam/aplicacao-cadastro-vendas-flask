@@ -6,40 +6,12 @@ from datetime import datetime
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///minha_aplicacao.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.secret_key = 'sua_chave_secreta_aqui' # Mude isso para uma chave mais forte
+app.secret_key = 'sua_chave_secreta_aqui'
 
-# Inicializa o banco de dados
 db.init_app(app)
 
-# Cria as tabelas do banco de dados se elas não existirem
 with app.app_context():
     db.create_all()
-
-# --- Rotas ---
-
-@app.route('/api/produtos')
-def api_produtos():
-    query = request.args.get('q', '').strip() # Pega o termo de busca da URL
-    if query:
-        # Busca produtos cujo nome ou marca contenham a 'query' (case-insensitive)
-        produtos = Produto.query.filter(
-            (Produto.nome.ilike(f'%{query}%')) |  # Busca no nome
-            (Produto.marca.ilike(f'%{query}%'))   # Busca na marca
-        ).limit(10).all() # Limita a 10 resultados para performance
-    else:
-        # Se não houver query, retorna todos os produtos (ou nenhum, dependendo da sua preferência)
-        # Para consulta de estoque na venda, faz mais sentido retornar todos se não houver filtro inicial
-        produtos = Produto.query.all() # Alterei aqui para retornar todos se a query for vazia
-    
-    # Prepara os dados dos produtos para enviar como JSON
-    produtos_data = [{
-        'id': p.id,
-        'nome': p.nome,
-        'marca': p.marca,
-        'valor': p.valor,
-        'quantidade_estoque': p.quantidade
-    } for p in produtos]
-    return jsonify(produtos_data)
 
 @app.route('/')
 def home():
@@ -110,7 +82,7 @@ def api_produtos():
             (Produto.marca.ilike(f'%{query}%'))
         ).limit(10).all()
     else:
-        produtos = []
+        produtos = Produto.query.all()
     
     produtos_data = [{
         'id': p.id,
@@ -128,9 +100,9 @@ def finalizar_venda():
     valor_total_venda = 0.0
 
     try:
-        nova_venda = Venda(valor_total=0.0) # Valor_total será atualizado depois
+        nova_venda = Venda(valor_total=0.0)
         db.session.add(nova_venda)
-        db.session.flush() # Para obter o ID da venda antes de commitar
+        db.session.flush()
 
         for item_data in itens_vendidos:
             produto_id = item_data['produto_id']
@@ -140,7 +112,6 @@ def finalizar_venda():
             if not produto or produto.quantidade < quantidade_vendida:
                 raise ValueError(f"Estoque insuficiente para {produto.nome} ou produto não encontrado.")
             
-            # Atualiza o estoque do produto
             produto.quantidade -= quantidade_vendida
             
             preco_unitario = produto.valor
@@ -174,13 +145,12 @@ def detalhes_venda(venda_id):
     venda = Venda.query.get_or_404(venda_id)
     return render_template('detalhes_venda.html', venda=venda)
 
-# Nova rota para consulta de estoque
 @app.route('/estoque')
 def estoque():
-    # Consulta todos os produtos ordenados pelo nome
     produtos = Produto.query.order_by(Produto.nome).all()
     return render_template('estoque.html', produtos=produtos)
 
 
 if __name__ == '__main__':
     app.run(debug=True)
+    
