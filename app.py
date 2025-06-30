@@ -1,4 +1,3 @@
-# app.py
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from database import db, Cliente, Produto, Venda, VendaItem
 from datetime import datetime
@@ -150,7 +149,5 @@ def estoque():
     produtos = Produto.query.order_by(Produto.nome).all()
     return render_template('estoque.html', produtos=produtos)
 
-
 if __name__ == '__main__':
     app.run(debug=True)
-    
